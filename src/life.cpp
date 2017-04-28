@@ -4,6 +4,9 @@
 #include <time.h>
 
 static int width, height;
+
+//colors for the board
+
 void init(bool **board, int w, int h) {
     srand(time(NULL));
     width = w;
@@ -35,6 +38,8 @@ void init(bool **board, int w, int h) {
             }
         }
     }
+    init_pair(1, COLOR_BLACK, COLOR_BLUE);
+    init_pair(2, COLOR_RED, COLOR_BLUE);
 }
 
 void updateBoard(bool **board) {
@@ -87,6 +92,9 @@ void updateBoard(bool **board) {
 }
 
 void draw(bool** board) {
+
+    // first draw the board
+    attron(COLOR_PAIR(2));
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             move(j, i);
@@ -97,4 +105,19 @@ void draw(bool** board) {
             }
         }
     }
+    attroff(COLOR_PAIR(2));
+
+    // then draw the menu at the bottom of the screen
+    // first the background bar
+    attron(COLOR_PAIR(1));
+    for (int i = 0; i < width; i++) {
+        move(height, i);
+        printw(" ");
+
+    }
+
+    // then write the text over it
+    move(height, 0);
+    printw("Keys: 'q'-quit");
+    attroff(COLOR_PAIR(1));
 }
