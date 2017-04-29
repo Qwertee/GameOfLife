@@ -3,18 +3,22 @@
 #include <ncurses.h>
 #include <time.h>
 
+#define STATUS_BAR_COLOR 1
+#define BOARD_COLOR 2
+
 static int width, height;
 
 //colors for the board
 
 void init(bool **board, int w, int h) {
-    srand(time(NULL));
+    // srand() wants a uint so I'm casting it so my IDE stops complaining about type mismatches
+    srand((unsigned int)time(NULL));
     width = w;
     height = h;
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             //randomly draw a glider
-            if (rand() % 75 < 1) {
+            if (rand() % 50 < 1) {
                 // check the bounds of the area to draw
                 if (i + 2 < width && j + 2 < height) {
                     board[i][j] = 1;
@@ -23,7 +27,7 @@ void init(bool **board, int w, int h) {
                     board[i + 2][j + 1] = 1;
                     board[i + 1][j + 2] = 1;
                 }
-            } else if (rand() % 75 < 1) { // blinker
+            } else if (rand() % 50 < 1) { // blinker
                 if (i + 2 < width) {
                     board[i][j] = 1;
                     board[i + 1][j] = 1;
@@ -38,13 +42,14 @@ void init(bool **board, int w, int h) {
             }
         }
     }
-    init_pair(1, COLOR_BLACK, COLOR_BLUE);
-    init_pair(2, COLOR_RED, COLOR_BLUE);
+
+    // initialize the colors for the
+    init_pair(STATUS_BAR_COLOR, COLOR_BLACK, COLOR_GREEN);
+    init_pair(BOARD_COLOR, COLOR_WHITE, COLOR_BLACK);
 }
 
 void updateBoard(bool **board) {
     // need a new board to fill to avoid messing with the current board
-    // TODO: Make this more efficient
     bool nextBoard[width][height];
 
     for (int i = 0; i < width; i++) {
@@ -94,7 +99,7 @@ void updateBoard(bool **board) {
 void draw(bool** board) {
 
     // first draw the board
-    attron(COLOR_PAIR(2));
+    attron(COLOR_PAIR(BOARD_COLOR));
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             move(j, i);
@@ -105,11 +110,11 @@ void draw(bool** board) {
             }
         }
     }
-    attroff(COLOR_PAIR(2));
+    attroff(COLOR_PAIR(BOARD_COLOR));
 
     // then draw the menu at the bottom of the screen
     // first the background bar
-    attron(COLOR_PAIR(1));
+    attron(COLOR_PAIR(STATUS_BAR_COLOR));
     for (int i = 0; i < width; i++) {
         move(height, i);
         printw(" ");
@@ -119,5 +124,5 @@ void draw(bool** board) {
     // then write the text over it
     move(height, 0);
     printw("Keys: 'q'-quit");
-    attroff(COLOR_PAIR(1));
+    attroff(COLOR_PAIR(STATUS_BAR_COLOR));
 }

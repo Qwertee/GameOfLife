@@ -38,7 +38,6 @@ int main() {
     bool running = true;
 
     // main loop of the program
-    // TODO: Add a way to quit the game without having to kill it
     int ch;
     while (running) {
         updateBoard(board);
@@ -46,7 +45,8 @@ int main() {
         refresh();
 
         // check if the user has pressed q to quit
-        if (ch = getch()) {
+        ch = getch();
+        if (ch != ERR) {
             if (ch == 'q') {
                 running = false;
             }
