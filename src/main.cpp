@@ -39,16 +39,22 @@ int main() {
 
     // main loop of the program
     int ch;
+    bool paused = false;
     while (running) {
-        updateBoard(board);
-        draw(board);
-        refresh();
+        if(!paused) {
+            updateBoard(board);
+            draw(board);
+            refresh();
+        }
 
         // check if the user has pressed q to quit
         ch = getch();
         if (ch != ERR) {
             if (ch == 'q') {
                 running = false;
+            }
+            else if (ch == ' ') {
+                paused = !paused;
             }
         }
         // sleep for a bit to pace the execution of the program

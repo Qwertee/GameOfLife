@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ncurses.h>
 #include <time.h>
+#include <algorithm>
 
 #define STATUS_BAR_COLOR 1
 #define BOARD_COLOR 2
@@ -96,6 +97,14 @@ void updateBoard(bool **board) {
     }
 }
 
+int countLiving(bool **board) {
+    int numLiving = 0;
+    for (int i = 0; i < width; ++i) {
+        numLiving += std::count(board[i], board[i] + height, true);
+    }
+    return numLiving;
+}
+
 void draw(bool** board) {
 
     // first draw the board
@@ -123,6 +132,8 @@ void draw(bool** board) {
 
     // then write the text over it
     move(height, 0);
-    printw("Keys: 'q'-quit");
+    printw("Keys: 'q'-quit, 'SPC'-pause");
+    move(height, width - 12);
+    printw("Living: %i", countLiving(board));
     attroff(COLOR_PAIR(STATUS_BAR_COLOR));
 }
