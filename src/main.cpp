@@ -47,7 +47,7 @@ int main() {
             refresh();
         }
 
-        // check if the user has pressed q to quit
+        // input handling
         ch = getch();
         if (ch != ERR) {
             if (ch == 'q') {
@@ -55,6 +55,11 @@ int main() {
             }
             else if (ch == ' ') {
                 paused = !paused;
+            }
+            else if (ch == 's' && paused) {
+                updateBoard(board);
+                draw(board);
+                refresh();
             }
         }
         // sleep for a bit to pace the execution of the program

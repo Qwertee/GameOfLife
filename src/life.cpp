@@ -131,9 +131,19 @@ void draw(bool** board) {
     }
 
     // then write the text over it
+    int numLiving = countLiving(board);
+    static int max = 0, min = 9999;
+    if(numLiving > max) {
+        max = numLiving;
+    }
+    if (numLiving < min) {
+        min = numLiving;
+    }
     move(height, 0);
-    printw("Keys: 'q'-quit, 'SPC'-pause");
+    printw("Keys: 'q'-quit, 'SPC'-pause, 's'-step");
     move(height, width - 12);
-    printw("Living: %i", countLiving(board));
+    printw("Living: %i", numLiving);
+    move(height, width - 32);
+    printw("%i/%i (min/max)", min, max);
     attroff(COLOR_PAIR(STATUS_BAR_COLOR));
 }
